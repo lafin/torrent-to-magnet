@@ -16,11 +16,14 @@ function stringToHex(str) {
     return hex;
 }
 
-var input = $('input[type="file"]');
-input.on('change', function (e) {
+var input = document.getElementById('upload');
+input.onchange = function (e) {
     e.preventDefault();
     var file = this.files[0],
         reader = new FileReader();
+    if (file.type !== 'application/x-bittorrent') {
+        return false;
+    }
     reader.readAsArrayBuffer(file);
     reader.onload = function () {
         var metadata = bdecode(arrayBufferToString(this.result), {
@@ -32,4 +35,4 @@ input.on('change', function (e) {
         document.getElementById('magnet').value = 'magnet:?xt=urn:btih:' + stringToHex(arrayBufferToString(str)) + '&dn=' + metadata.info.name;
     };
     return false;
-});
+};
